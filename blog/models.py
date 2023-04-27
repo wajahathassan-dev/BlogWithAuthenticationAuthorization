@@ -54,7 +54,7 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["email", "first_name", "last_name", "is_admin"]
+    REQUIRED_FIELDS = ["first_name", "last_name", "is_admin"]
 
     def __str__(self):
         return self.email
@@ -71,7 +71,7 @@ class User(AbstractBaseUser):
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
-    author = models.CharField(max_length=100)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 

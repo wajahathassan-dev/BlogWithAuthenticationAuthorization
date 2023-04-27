@@ -8,10 +8,14 @@ from blog.models import User
 
 # - Register
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(style={'input_type': 'password'})
+    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     class Meta:
         model = User
         fields = ['email', 'first_name', 'last_name', 'password', 'password2']
+
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
 
     def validate(self, attrs):
         password = attrs.get('password')
@@ -25,7 +29,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validate_data)
 
 # - Login
-
+class UserLoginSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(max_length=255)
+    class Meta:
+        model = User
+        fields = ['email', 'password']
 
 
 # Post
@@ -33,4 +41,4 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogPost
-        fields = ['title', 'author', 'created', 'last_updated']
+        fields = ['id', 'title', 'author', 'created', 'last_updated']
